@@ -28,12 +28,15 @@ class AgreementViewModel(private val repo: AgreementRepository) : ViewModel() {
 
     // todo 이해 안감
     // [체크포인트] 복사본 저장을 위해 List<AgreementItem> 스택 유지
-  //  private val historyStack = mutableListOf<List<AgreementItem>>()
+    //  private val historyStack = mutableListOf<List<AgreementItem>>()
 
+    //todo 히스토리 스택만 상수 처리
     private val historyStack = mutableListOf<List<AgreementItem>>()
 
     init {
         loadAgreements()
+        //todo
+// 초기 데이터 세팅 (실제론 Repository 등에서 가져옴) val initialTerms = listOf( TermItem(1, "서비스 이용약관 동의", isRequired = true), TermItem(2, "개인정보 처리방침 동의", isRequired = true), TermItem(3, "마케팅 정보 수신 동의", isRequired = false) ) _uiState.value = TermsUiState(terms = initialTerms)
     }
 
     fun handleIntent(intent: AgreementIntent) {
@@ -51,8 +54,7 @@ class AgreementViewModel(private val repo: AgreementRepository) : ViewModel() {
     private fun loadAgreements() = viewModelScope.launch {
         // 로딩프로그레스 바 만듬?
         _agreementState.update { it.copy(isLoading = true) }
-        repo.fetchAgreementItems().onSuccess {
-                data ->
+        repo.fetchAgreementItems().onSuccess { data ->
             _agreementState.update { it.copy(isLoading = false, agreementItems = data) }
         }.onFailure {
             _agreementState.update { it.copy(isLoading = false) }
@@ -61,8 +63,8 @@ class AgreementViewModel(private val repo: AgreementRepository) : ViewModel() {
         }
     }
 
-   private fun setAllAgree(isChecked: Boolean) {
-       saveHistory()
+    private fun setAllAgree(isChecked: Boolean) {
+        saveHistory()
         _agreementState.update { s ->
             s.copy(
                 agreementItems = s.agreementItems.map {
@@ -89,39 +91,50 @@ class AgreementViewModel(private val repo: AgreementRepository) : ViewModel() {
         saveHistory()
         _agreementState.update { s ->
             s.copy(
-                agreementItems = s.agreementItems.map {it.copy(isChecked = it.isRequired)
+                agreementItems = s.agreementItems.map {
+                    it.copy(isChecked = it.isRequired)
                 })
 
         }
     }
 
-    private fun play (){
+    private fun play() {
         // 플레이 버튼 클릭 이벤트를 위한 함수
-        val message = "[PLAY] : ${_agreementState.value.agreementItems.filter {
-            it.isChecked }.map { it.id }}"
+        val message = "[PLAY] : ${
+            _agreementState.value.agreementItems.filter {
+                it.isChecked
+            }.map { it.id }
+        }"
         _agreementState.update {
             it.copy(logs = it.logs + "$message")
         }
-        viewModelScope.launch { _agreementEffect.emit(AgreementEffect.ShowToastMessage("TEST"))}
+        viewModelScope.launch { _agreementEffect.emit(AgreementEffect.ShowToastMessage("TEST")) }
     }
 
-    private fun  rewind(){
+    private fun rewind() {
         // 되감기 버튼 클릭 이벤트를 위한 함수
 
         if (historyStack.isNotEmpty()) {
             val prev = historyStack.removeAt(historyStack.lastIndex)
             _agreementState.update {
-                it.copy(agreementItems = prev,
+                it.copy(
+                    agreementItems = prev,
                     isHistoryAvailable = historyStack.isNotEmpty(),
-                    logs = it.logs + "[REWIND] : ${_agreementState.value.agreementItems.filter {
-                        it.isChecked }.map { it.id }}") }
+                    logs = it.logs + "[REWIND] : ${
+                        _agreementState.value.agreementItems.filter {
+                            it.isChecked
+                        }.map { it.id }
+                    }"
+                )
+            }
         }
     }
 
-    private fun saveHistory(){
-        // todo 이해 안감
+    private fun saveHistory() {
+        // todo 이해 안감 얕은 복사 , 깊은 복사 → 전부 같은 참조
         // [중요] .toList()를 붙여서 현재 리스트의 스냅샷(복사본)을 저장해야 함
-      //  historyStack.add(_agreementState.value.agreementItems.toList())
+        //  historyStack.add(_agreementState.value.agreementItems.toList())
+        //historyStack.add(_agreementState.value.agreementItems.map { it.copy() })
         historyStack.add(_agreementState.value.agreementItems)
         _agreementState.update { it.copy(isHistoryAvailable = true) }
     }

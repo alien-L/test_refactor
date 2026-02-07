@@ -3,7 +3,7 @@ package com.rainist.banksalad.interview.compose.feature.agreement.presentation.m
 import com.rainist.banksalad.interview.compose.feature.agreement.data.model.AgreementItem
 
 data class AgreementUiState(
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = false, //todo LoadState
     val agreementItems: List<AgreementItem> = emptyList(),
     val logs: List<String> = emptyList(), // 로그뷰
     val isHistoryAvailable: Boolean = false
@@ -20,3 +20,7 @@ data class AgreementUiState(
 
     // 이것도 state 도 관리하고 싶긴해
 }
+
+//enum class LoadState {
+//    IDLE, LOADING, SUCCESS, ERROR
+//}

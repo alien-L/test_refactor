@@ -4,3 +4,5 @@ sealed  interface AgreementEffect {
     object  Error : AgreementEffect
     data class ShowToastMessage(val message: String) : AgreementEffect
 }
+
+//ShowError

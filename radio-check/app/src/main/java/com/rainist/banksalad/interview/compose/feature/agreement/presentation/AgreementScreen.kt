@@ -49,7 +49,7 @@ fun AgreementScreen(
     ) { paddingValues -> // [교정] 안 쓰던 paddingValues를 Modifier.padding에 적용
 
         if (state.isLoading) {
-            LoadingBox()
+            LoadingBox() // todo core/ui/component
         } else {
             // [분리] 메인 컨텐츠를 별도 함수로 추출하여 가독성 향상
             AgreementContent(
