@@ -1,12 +1,12 @@
-package com.rainist.banksalad.interview.compose.feture.agreement
+package com.rainist.banksalad.interview.compose.feature.agreement.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rainist.banksalad.interview.compose.feture.data.AgreementItem
-import com.rainist.banksalad.interview.compose.feture.data.AgreementRepository
-import com.rainist.banksalad.interview.compose.feture.model.AgreementEffect
-import com.rainist.banksalad.interview.compose.feture.model.AgreementIntent
-import com.rainist.banksalad.interview.compose.feture.model.AgreementUiState
+import com.rainist.banksalad.interview.compose.feature.agreement.data.model.AgreementItem
+import com.rainist.banksalad.interview.compose.feature.agreement.data.repository.AgreementRepository
+import com.rainist.banksalad.interview.compose.feature.agreement.presentation.mvi.AgreementEffect
+import com.rainist.banksalad.interview.compose.feature.agreement.presentation.mvi.AgreementIntent
+import com.rainist.banksalad.interview.compose.feature.agreement.presentation.mvi.AgreementUiState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -25,32 +25,37 @@ class AgreementViewModel(private val repo: AgreementRepository) : ViewModel() {
 
     val agreementEffect = _agreementEffect.asSharedFlow()
 
+
+    // todo 이해 안감
+    // [체크포인트] 복사본 저장을 위해 List<AgreementItem> 스택 유지
+  //  private val historyStack = mutableListOf<List<AgreementItem>>()
+
     private val historyStack = mutableListOf<List<AgreementItem>>()
 
     init {
-        loadItem()
+        loadAgreements()
     }
 
     fun handleIntent(intent: AgreementIntent) {
         when (intent) {
-            is AgreementIntent.SetAllAgree -> setAllAgree(intent.isChecked)
-            is AgreementIntent.Load -> loadItem()
-            is AgreementIntent.ClickTermAgreement -> clickTermAgreement(intent.id)
-            is AgreementIntent.SetRequiredAgree -> setRequiredAgree()
+            is AgreementIntent.OnSelectAll -> setAllAgree(intent.isChecked)
+            is AgreementIntent.OnInitialLoad -> loadAgreements()
+            is AgreementIntent.OnAgreementChecked -> clickTermAgreement(intent.id)
+            is AgreementIntent.OnSelectRequiredOnly -> setRequiredAgree()
             is AgreementIntent.Play -> play()
             is AgreementIntent.Rewind -> rewind()
         }
     }
 
 
-    private fun loadItem() = viewModelScope.launch {
-        // todo 로딩바 필요?
+    private fun loadAgreements() = viewModelScope.launch {
+        // 로딩프로그레스 바 만듬?
         _agreementState.update { it.copy(isLoading = true) }
         repo.fetchAgreementItems().onSuccess {
-            // ui 보여줌
                 data ->
-            _agreementState.update { it.copy(isLoading = false, terms = data) }
+            _agreementState.update { it.copy(isLoading = false, agreementItems = data) }
         }.onFailure {
+            _agreementState.update { it.copy(isLoading = false) }
             _agreementEffect.emit(AgreementEffect.Error)
             //실패에 대한 처리도 있을까?
         }
@@ -60,7 +65,7 @@ class AgreementViewModel(private val repo: AgreementRepository) : ViewModel() {
        saveHistory()
         _agreementState.update { s ->
             s.copy(
-                terms = s.terms.map {
+                agreementItems = s.agreementItems.map {
                     it.copy(
                         isChecked = isChecked
                     )
@@ -73,7 +78,7 @@ class AgreementViewModel(private val repo: AgreementRepository) : ViewModel() {
         saveHistory()
         _agreementState.update { s ->
             s.copy(
-                terms = s.terms.map {
+                agreementItems = s.agreementItems.map {
                     if (it.id == id) it.copy(isChecked = !it.isChecked) else it
                 }
             )
@@ -84,7 +89,7 @@ class AgreementViewModel(private val repo: AgreementRepository) : ViewModel() {
         saveHistory()
         _agreementState.update { s ->
             s.copy(
-                terms = s.terms.map {it.copy(isChecked = it.isRequired)
+                agreementItems = s.agreementItems.map {it.copy(isChecked = it.isRequired)
                 })
 
         }
@@ -92,11 +97,12 @@ class AgreementViewModel(private val repo: AgreementRepository) : ViewModel() {
 
     private fun play (){
         // 플레이 버튼 클릭 이벤트를 위한 함수
-        val message = "[PLAY] : ${_agreementState.value.terms.filter {
+        val message = "[PLAY] : ${_agreementState.value.agreementItems.filter {
             it.isChecked }.map { it.id }}"
         _agreementState.update {
             it.copy(logs = it.logs + "$message")
         }
+        viewModelScope.launch { _agreementEffect.emit(AgreementEffect.ShowToastMessage("TEST"))}
     }
 
     private fun  rewind(){
@@ -105,14 +111,18 @@ class AgreementViewModel(private val repo: AgreementRepository) : ViewModel() {
         if (historyStack.isNotEmpty()) {
             val prev = historyStack.removeAt(historyStack.lastIndex)
             _agreementState.update {
-                it.copy(terms = prev,
+                it.copy(agreementItems = prev,
                     isHistoryAvailable = historyStack.isNotEmpty(),
-                    logs = it.logs + "[REWIND] 복구") }
+                    logs = it.logs + "[REWIND] : ${_agreementState.value.agreementItems.filter {
+                        it.isChecked }.map { it.id }}") }
         }
     }
 
     private fun saveHistory(){
-        historyStack.add(_agreementState.value.terms)
+        // todo 이해 안감
+        // [중요] .toList()를 붙여서 현재 리스트의 스냅샷(복사본)을 저장해야 함
+      //  historyStack.add(_agreementState.value.agreementItems.toList())
+        historyStack.add(_agreementState.value.agreementItems)
         _agreementState.update { it.copy(isHistoryAvailable = true) }
     }
 }

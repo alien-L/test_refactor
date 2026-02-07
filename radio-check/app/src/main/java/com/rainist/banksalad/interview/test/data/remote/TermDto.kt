@@ -1,6 +1,6 @@
-package com.rainist.banksalad.interview.data.remote
+package com.rainist.banksalad.interview.test.data.remote
 
-import com.rainist.banksalad.interview.domain.model.TermItem
+import com.rainist.banksalad.interview.test.data.domain.model.TermItem
 import retrofit2.http.GET
 
 // 서버에서 내려주는 데이터 형식

@@ -1,6 +1,6 @@
-package com.rainist.banksalad.interview.domain.repository
+package com.rainist.banksalad.interview.test.data.domain.repository
 
-import com.rainist.banksalad.interview.domain.model.TermItem
+import com.rainist.banksalad.interview.test.data.domain.model.TermItem
 
 // domain/repository/TermsRepository.kt
 interface TermsRepository {

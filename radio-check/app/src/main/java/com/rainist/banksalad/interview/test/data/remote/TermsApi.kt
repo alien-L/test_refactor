@@ -1,4 +1,4 @@
-package com.rainist.banksalad.interview.data.remote
+package com.rainist.banksalad.interview.test.data.remote
 
 import kotlinx.coroutines.delay
 

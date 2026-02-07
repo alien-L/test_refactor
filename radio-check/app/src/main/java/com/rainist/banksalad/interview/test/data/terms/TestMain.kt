@@ -1,4 +1,4 @@
-package com.rainist.banksalad.interview.testui.terms
+package com.rainist.banksalad.interview.test.data.terms
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement

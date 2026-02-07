@@ -1,4 +1,4 @@
-package com.rainist.banksalad.interview.compose.feture.data
+package com.rainist.banksalad.interview.compose.feature.agreement.data.model
 
 data class AgreementItem(
     val id : Int, // 각 항목 (라디오 버튼 , 선택박스) 에 대한 구분값

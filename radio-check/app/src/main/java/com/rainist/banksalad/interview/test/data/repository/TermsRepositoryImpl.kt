@@ -1,9 +1,9 @@
-package com.rainist.banksalad.interview.data.repository
+package com.rainist.banksalad.interview.test.data.repository
 
-import com.rainist.banksalad.interview.data.remote.TermDto
-import com.rainist.banksalad.interview.data.remote.TermsApi
-import com.rainist.banksalad.interview.domain.model.TermItem
-import com.rainist.banksalad.interview.domain.repository.TermsRepository
+import com.rainist.banksalad.interview.test.data.remote.TermDto
+import com.rainist.banksalad.interview.test.data.remote.TermsApi
+import com.rainist.banksalad.interview.test.data.domain.model.TermItem
+import com.rainist.banksalad.interview.test.data.domain.repository.TermsRepository
 import kotlinx.coroutines.delay
 
 class TermsRepositoryImpl(

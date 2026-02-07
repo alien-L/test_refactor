@@ -1,9 +1,9 @@
-package com.rainist.banksalad.interview.testui.terms
+package com.rainist.banksalad.interview.test.data.terms
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rainist.banksalad.interview.domain.model.TermItem
-import com.rainist.banksalad.interview.domain.repository.TermsRepository
+import com.rainist.banksalad.interview.test.data.domain.model.TermItem
+import com.rainist.banksalad.interview.test.data.domain.repository.TermsRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow

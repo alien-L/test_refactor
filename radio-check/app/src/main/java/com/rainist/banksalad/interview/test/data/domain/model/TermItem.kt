@@ -1,4 +1,4 @@
-package com.rainist.banksalad.interview.domain.model
+package com.rainist.banksalad.interview.test.data.domain.model
 
 data class TermItem(
     val id: Int,

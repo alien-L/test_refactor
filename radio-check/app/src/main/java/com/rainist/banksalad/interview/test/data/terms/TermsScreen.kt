@@ -1,4 +1,4 @@
-package com.rainist.banksalad.interview.testui.terms
+package com.rainist.banksalad.interview.test.data.terms
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

@@ -8,9 +8,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 
 @Composable
-fun CheckboxWithText(text: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit,
-                     textColor: Color = Color.Unspecified) {
-    // 1. 기본값을 설정해 기존 호출부의 에러를 방지하면서 확장함
+fun CheckboxWithText(
+    text: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit,
+    textColor: Color = Color.Unspecified,
+) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Checkbox(checked = checked, onCheckedChange = onCheckedChange)
         Text(

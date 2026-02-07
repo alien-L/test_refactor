@@ -1,6 +1,6 @@
-package com.rainist.banksalad.interview.testui.terms
+package com.rainist.banksalad.interview.test.data.terms
 
-import com.rainist.banksalad.interview.domain.model.TermItem
+import com.rainist.banksalad.interview.test.data.domain.model.TermItem
 
 
 // 1. 상태: UI가 그릴 모든 데이터
