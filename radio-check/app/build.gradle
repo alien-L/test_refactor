@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'kotlin-kapt'
+    id 'kotlin-kapt' // hilt?
 }
 
 ext {
@@ -12,7 +12,6 @@ ext {
     composeUIVersion = '1.4.0'
     composeActivityVersion = '1.7.0'
     composeViewModelVersion = '2.6.1'
-    retrofit = '2.9.0'
 }
 
 android {
@@ -96,6 +95,6 @@ dependencies {
     implementation "io.reactivex.rxjava3:rxkotlin:3.0.1"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1'
 
-    //추가
-    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+// [권장] collectAsStateWithLifecycle 사용을 위해 추가
+    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.1"
 }
